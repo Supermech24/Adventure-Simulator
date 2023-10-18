@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation'
-import Image from 'next/image'
+import { OpenAI } from 'openai';
 export default function Home() {
     const [input, setInput] = useState("");
     const router = useRouter();
@@ -9,20 +9,41 @@ export default function Home() {
     function textbox_updated(e) {
         setInput(e.target.value);
       }
-
+    /* async function is_api_key_valid() {
+    try{
+        response = await openai.completions.create(
+            engine="davinci",
+            prompt="This is a test.",
+            max_tokens=5
+        );
+    }
+    catch(error){
+        return false;
+    }
+    finally {
+        return true;
+    }
+    }
     function submit_button(e) {
-        router.push("/game/" + input);
+        OpenAI.api_key = input;
+        let api_key_valid = is_api_key_valid();
+        if (api_key_valid) {
+            router.push("/game/" + input);
+        }
+    } */
+    function submit_button(e) {
+            router.push("/game/" + input);
     }
     return (
         <div id="api-key-getter">
         
-            <Image src="/Adventure.webp"
-          width={1800}
-          height={2500}
-          id ="background-image"/>
+            
             <div id="title">
                 <p>
-                    Choose Your Own Adventure: An AI Game
+                    AdventurAI: A Choose Your Own Adventure Game
+                </p>
+                <p>
+                    Created by Edwin Luhnow
                 </p>
             </div>
             <div id = "api-key-input">

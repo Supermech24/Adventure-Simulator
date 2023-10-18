@@ -1,7 +1,17 @@
+/**
+ * todo:
+ * 1. on title page mention that the API key needs both Dall-e and chatbot access
+ * 2. Make sure API key is valid before accepting
+ * 3. Make choices look more like buttons
+ * 4. makes a spin loader for the choices as well
+ * 5. pick final colors for page
+ * 6. think of ideas for next project
+ */
 'use client';
 import Image from 'next/image'
 import { OpenAI } from 'openai';
 import { useState } from 'react';
+import { GuardSpinner } from "react-spinners-kit";
 
 let list = [];
 
@@ -26,7 +36,7 @@ export default function Home({ params }) {
   async function startup_text(five_words) {
     let response = await openai.completions.create({
       model: "text-davinci-003",
-      prompt: "Generate the setup of the start of a story about an adventure using these 5 words: " + five_words,
+      prompt: "Generate the setup of the start of a story about an adventure using this setting: " + five_words,
       temperature: 0,
       max_tokens: 500
     });
@@ -39,7 +49,7 @@ export default function Home({ params }) {
   async function startup_image(five_words) {
     let response = await openai.completions.create({
       model: "text-davinci-003",
-      prompt: "Generate a short image prompt for DALL-E about a story centering around these words:" + five_words,
+      prompt: "Generate a short image prompt for DALL-E about a story centering around this story setting:" + five_words,
       temperature: 0,
       max_tokens: 500
     })
@@ -60,7 +70,7 @@ export default function Home({ params }) {
   }
   async function gameLoopText(choice) {
     let user_response = choice;
-    changeList({"role": "user", "content": "Progress the story a little bit with the following choice: Option " + user_response})
+    changeList({"role": "user", "content": "Progress the story with the following choice: Option " + user_response})
     let AI_response = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: list
@@ -87,41 +97,20 @@ export default function Home({ params }) {
   const [choice1, setChoice1] = useState("choice 1");
   const [choice2, setChoice2] = useState("choice 2");
   const [choice3, setChoice3] = useState("choice 3");
+  const [loading, setLoading] = useState(false);
 
   function choice1_button(e) {
-    gameLoopText(1).then (res1 => {
-      gameLoopImage().then(res => {
-        gameLoopChoices().then(choices => {
-          let index1 = choices.indexOf("1");
-          let index2 = choices.indexOf("2");
-          let index3 = choices.indexOf("3");
-          setChoice1(choices.substring(index1, index2));
-          setChoice2(choices.substring(index2, index3));
-          setChoice3(choices.substring(index3));
-          setImage(res);
-          setOutput(res1);
-      })
-      })
-    })
+    choice_button_clicked(1);
   }
   function choice2_button(e) {
-    gameLoopText(2).then (res1 => {
-      gameLoopImage().then(res => {
-        gameLoopChoices().then(choices => {
-          let index1 = choices.indexOf("1");
-          let index2 = choices.indexOf("2");
-          let index3 = choices.indexOf("3");
-          setChoice1(choices.substring(index1, index2));
-          setChoice2(choices.substring(index2, index3));
-          setChoice3(choices.substring(index3));
-          setImage(res);
-          setOutput(res1);
-      })
-      })
-    })
+    choice_button_clicked(2);
   }
   function choice3_button(e) {
-    gameLoopText(3).then (res1 => {
+    choice_button_clicked(3);
+  }
+  function choice_button_clicked(choice) {
+    setLoading(true);
+    gameLoopText(choice).then (res1 => {
       gameLoopImage().then(res => {
         gameLoopChoices().then(choices => {
           let index1 = choices.indexOf("1");
@@ -132,11 +121,13 @@ export default function Home({ params }) {
           setChoice3(choices.substring(index3));
           setImage(res);
           setOutput(res1);
+          setLoading(false);
       })
       })
     })
   }
   function submit_button(e) {
+    setLoading(true);
     console.log(counter);
     if (counter == 0) {
       startup_text(input).then (story => {
@@ -150,6 +141,7 @@ export default function Home({ params }) {
             setChoice3(choices.substring(index3));
             setOutput(story);
             setImage(img);
+            setLoading(false);
           })
           
         })
@@ -167,15 +159,22 @@ export default function Home({ params }) {
     <div id="display">
 
       <div id="left_side">
-      <div id="photo">
+      {loading==true ? (
+        <div id="spinner">
+        <GuardSpinner size={50} color="#4CB5AE" loading={true}/>
+        </div>
+      ) : (
+        <div id="photo">
         <Image src={image}
           width={700}
           height={700}
           alt="A picture of an adventure"
+          id="img"
         />
-        
         <br></br>
-      </div>
+        </div>
+      )}
+      
 
       {counter>0 ? (
       <div id = "choices">
@@ -192,7 +191,7 @@ export default function Home({ params }) {
     ) : (
       <div id="input_box">
       <p id="prompt">
-        Please give 5 words to describe your adventure:
+        Please describe the setting for your adventure:
       </p>
         <textarea
           id="input"
@@ -202,20 +201,28 @@ export default function Home({ params }) {
           value={input}
           onChange={(e) => textbox_updated(e)}
         />
+       
+        <div id="button_box">
+          <button id="button" onClick={(e) => submit_button(e)}>Submit</button>
+        </div>
       </div> 
+      
     )}
       
       </div>
+    
       <div id="right_side">
       <div id="output">
-      <p id="output_text">
-      {output}
-      </p>
-      </div>
-      <div id="button_box">
-      <button id="button" onClick={(e) => submit_button(e)}>Submit</button>
+        <p id="output_text">
+          {output}
+        </p>
       </div>
       </div>
+      
+
+      
+      
+      
     </div>
   )
 
