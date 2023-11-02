@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import MouseTrail from "@pjsalita/react-mouse-trail";
+
 
 
   
@@ -14,14 +14,7 @@ export default function Home() {
     const [input, setInput] = useState("");
     const router = useRouter();
 
-    const config = {
-        color: "#ffffff",
-        idleAnimation: true,
-        idleAnimationCount: 10,
-        inverted: true,
-        size: 20,
-        trailCount: 50,
-      };
+   
 
     function textbox_updated(e) {
         setInput(e.target.value);
@@ -32,7 +25,6 @@ export default function Home() {
 
     return (
         <div id="api-key-getter">
-            <MouseTrail {...config} />
             <div id="background-image">
                 <Image src="/space.jpg"
                     id = "backimg"

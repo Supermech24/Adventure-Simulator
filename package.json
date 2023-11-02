@@ -9,12 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@pjsalita/react-mouse-trail": "^1.0.8",
     "autoprefixer": "10.4.15",
     "classlist-polyfill": "^1.2.0",
     "cursor-effects": "^1.0.12",
     "jquery": "^3.7.1",
-    "next": "^13.5.6",
+    "next": "13.4.19",
     "next-navigation": "^1.0.6",
     "openai": "^4.12.4",
     "postcss": "8.4.28",
