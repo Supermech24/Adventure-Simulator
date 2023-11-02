@@ -1,42 +1,46 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation'
-import { OpenAI } from 'openai';
+import Image from 'next/image'
+import MouseTrail from "@pjsalita/react-mouse-trail";
+
+
+  
+
+  
+
+
 export default function Home() {
     const [input, setInput] = useState("");
     const router = useRouter();
 
+    const config = {
+        color: "#ffffff",
+        idleAnimation: true,
+        idleAnimationCount: 10,
+        inverted: true,
+        size: 20,
+        trailCount: 50,
+      };
+
     function textbox_updated(e) {
         setInput(e.target.value);
       }
-    /* async function is_api_key_valid() {
-    try{
-        response = await openai.completions.create(
-            engine="davinci",
-            prompt="This is a test.",
-            max_tokens=5
-        );
-    }
-    catch(error){
-        return false;
-    }
-    finally {
-        return true;
-    }
-    }
-    function submit_button(e) {
-        OpenAI.api_key = input;
-        let api_key_valid = is_api_key_valid();
-        if (api_key_valid) {
-            router.push("/game/" + input);
-        }
-    } */
     function submit_button(e) {
             router.push("/game/" + input);
     }
+
     return (
         <div id="api-key-getter">
-        
+            <MouseTrail {...config} />
+            <div id="background-image">
+                <Image src="/space.jpg"
+                    id = "backimg"
+                    width={700}
+                    height={700}>
+                    
+                </Image>
+            </div>
             
             <div id="title">
                 <p>
@@ -62,6 +66,7 @@ export default function Home() {
                 <button id="verify-key" onClick={(e) => submit_button(e)}>
                     Verify Key
                 </button>
+                
             </div>
 
         </div>

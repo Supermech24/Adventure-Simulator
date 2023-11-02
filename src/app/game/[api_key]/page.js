@@ -160,9 +160,15 @@ export default function Home({ params }) {
 
       <div id="left_side">
       {loading==true ? (
+        <div id="image-placeholder">
         <div id="spinner">
         <GuardSpinner size={50} color="#4CB5AE" loading={true}/>
         </div>
+        <div id="generating-text">
+        <p>Please wait while we are generating your story.</p>
+        </div>
+        </div>
+        
       ) : (
         <div id="photo">
         <Image src={image}
